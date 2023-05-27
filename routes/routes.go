@@ -3,7 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/your-username/book-inventory/controllers"
+	"dev.azure.com/jbsorg/segundo_proyecto/_git/bookstore-ai-api/controllers"
 )
 
 // SetupRoutes configura las rutas de la API

@@ -1,12 +1,13 @@
 package main
+
 import (
 	"log"
+
+	"dev.azure.com/jbsorg/segundo_proyecto/_git/bookstore-ai-api/controllers"
+	"dev.azure.com/jbsorg/segundo_proyecto/_git/bookstore-ai-api/models"
+	"dev.azure.com/jbsorg/segundo_proyecto/_git/bookstore-ai-api/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/go-sql-driver/mysql"
-	"https://dev.azure.com/jbsorg/Segundo%20proyecto/_git/bookstore-ai-api/?path=/controllers&version=GBmain&_a=contents"
-	"https://dev.azure.com/jbsorg/Segundo%20proyecto/_git/bookstore-ai-api/?path=/models&version=GBmain&_a=contents"
-	"https://dev.azure.com/jbsorg/Segundo%20proyecto/_git/bookstore-ai-api/?path=/routes&version=GBmain&_a=contents"
-	
 )
 
 func main() {

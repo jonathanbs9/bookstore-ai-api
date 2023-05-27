@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/your-username/book-inventory/models"
+	"dev.azure.com/jbsorg/segundo_proyecto/_git/bookstore-ai-api/models"
 )
 
 type BookController struct {
