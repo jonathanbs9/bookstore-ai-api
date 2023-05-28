@@ -15,6 +15,7 @@ func SetupRoutes(router *gin.Engine, bookController *controllers.BookController)
 		booksGroup.GET("/name/:name", bookController.GetBookByName)
 		booksGroup.GET("/author/:author", bookController.GetBookByAuthor)
 		booksGroup.GET("/isbn/:isbn", bookController.GetBookByISBN)
+		booksGroup.GET("/id/:id", bookController.GetBookById)
 		booksGroup.POST("", bookController.CreateBook)
 		booksGroup.PUT("/:id", bookController.UpdateBook)
 	}
