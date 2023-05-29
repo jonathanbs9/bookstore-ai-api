@@ -11,8 +11,8 @@ pool:
 
 variables:
   GOBIN:  '$(GOPATH)/bin' # Go binaries path
-  GOROOT: '$(Agent.ToolsDirectory)/go' # Go installation path
-  GOPATH: '$(Agent.ToolsDirectory)/go/bin'
+  GOROOT: '/usr/local/go' # Go installation path
+  GOPATH: '$HOME/go'
   modulePath: 'dev.azure.com/jbsorg/segundo_proyecto/$(build.repository.name)' # Path to the module's code
 
 steps:
