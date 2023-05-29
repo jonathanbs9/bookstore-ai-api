@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"log"
 	"net/http"
 
 	"dev.azure.com/jbsorg/segundo_proyecto/_git/bookstore-ai-api/models"
@@ -125,15 +126,14 @@ func (bc *BookController) GetBookById(c *gin.Context) {
 
 	// Consulto BD
 	book, err := bc.GetBookByIdFromDatabase(id)
-
+	log.Println("Book: ", book)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al obtener el libro"})
-
-		// Verificar si encontró un libro por ID
-		if book == nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "Libro por ID no encontrado"})
-			return
-		}
+	}
+	// Verificar si encontró un libro por ID
+	if book == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Libro por ID no encontrado"})
+		return
 	}
 	c.JSON(http.StatusOK, book)
 }
@@ -147,6 +147,7 @@ func (bc *BookController) GetBookByIdFromDatabase(id string) (*models.Book, erro
 	err := row.Scan(&book.ID, &book.Title, &book.Author, &book.ISBN)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			log.Println("NO ENCUENTRA LIBRO -> ASIGNA NIL")
 			return nil, nil // No se encontró ningún libro
 		}
 		return nil, err
