@@ -28,6 +28,10 @@ steps:
   displayName: 'Set up the Go workspace'
 
 - script: |
+    echo $(Agent.ToolsDirectory)/go/go
+  displayName: 'Print Go directory'
+
+- script: |
     go version
     go get -v -t -d ./...
     if [ -f Gopkg.toml ]; then
