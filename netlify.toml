@@ -1,2 +1,3 @@
 [build]
-  publish = "dist" # Directorio de compilación de tu aplicación
+  command = "go build -o app"
+  publish = "app"
