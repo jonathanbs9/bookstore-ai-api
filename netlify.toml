@@ -1,4 +1,3 @@
 [build]
   command = "go mod download"
-  command = "go build -v ./... -o app"
   publish = "app"
