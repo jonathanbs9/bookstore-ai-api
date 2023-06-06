@@ -1,4 +1,3 @@
 [build]
-  command = "go mod download buikd -v -o app"
-  #command = "go build -v ./... -o app"
+  command = "go mod download \n  go build -v -o app"
   publish = "app"
