@@ -1,4 +1,4 @@
-module dev.azure.com/jbsorg/segundo_proyecto/_git/bookstore-ai-api
+module github.com/jonathanbs9/bookstore-ai-api
 
 go 1.16
 

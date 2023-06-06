@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"dev.azure.com/jbsorg/segundo_proyecto/_git/bookstore-ai-api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/jonathanbs9/bookstore-ai-api/models"
 )
 
 type BookController struct {

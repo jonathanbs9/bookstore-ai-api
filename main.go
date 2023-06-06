@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 
-	"dev.azure.com/jbsorg/segundo_proyecto/_git/bookstore-ai-api/controllers"
-	"dev.azure.com/jbsorg/segundo_proyecto/_git/bookstore-ai-api/routes"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jonathanbs9/bookstore-ai-api/controllers"
+	"github.com/jonathanbs9/bookstore-ai-api/routes"
 )
 
 func main() {
