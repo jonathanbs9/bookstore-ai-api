@@ -4,9 +4,11 @@ import (
 	//"database/sql"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 	"github.com/jonathanbs9/bookstore-ai-api/controllers"
 	"github.com/jonathanbs9/bookstore-ai-api/routes"
 	"gorm.io/driver/postgres"
@@ -38,8 +40,17 @@ func main() {
 	//defer db.Close()
 
 	//dsn := "jonathanbs:ihmQFPAYETnygjZodt49EA@tcp(azure-mule-888.g8x.cockroachlabs.cloud:26257)/book_inventory"
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error al cargar el archivo .env")
+	}
+	dbUser := os.Getenv("DBUSER")
+	dbPass := os.Getenv("DBPASS")
+	dbHost := os.Getenv("DBHOST")
+	dbPort := os.Getenv("DBPORT")
+	dbName := os.Getenv("DBNAME")
 
-	dsn := "postgresql://jonathanbs:ihmQFPAYETnygjZodt49EA@azure-mule-888.g8x.cockroachlabs.cloud:26257/book_inventory?sslmode=verify-full"
+	dsn := "postgresql://" + dbUser + ":" + dbPass + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=verify-full"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("failed to connect database", err)
