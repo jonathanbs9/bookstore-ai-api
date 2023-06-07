@@ -1,20 +1,29 @@
 package controllers
 
 import (
-	"database/sql"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jonathanbs9/bookstore-ai-api/models"
+	"gorm.io/gorm"
 )
 
-type BookController struct {
+/* type BookController struct {
 	db *sql.DB
+} */
+
+type BookController struct {
+	db *gorm.DB
 }
 
 // NewBookController crea una nueva instancia de BookController
-func NewBookController(db *sql.DB) *BookController {
+/*func NewBookController(db *sql.DB) *BookController {
+	return &BookController{
+		db: db,
+	}
+}*/
+
+func NewBookControllerWithGorm(db *gorm.DB) *BookController {
 	return &BookController{
 		db: db,
 	}
@@ -23,7 +32,8 @@ func NewBookController(db *sql.DB) *BookController {
 func (bc *BookController) ListBooks(c *gin.Context) {
 	// Consultar la base de datos para obtener los libros y devolver
 	// la lista como respuesta JSON
-	books, err := bc.getBooksFromDatabase()
+	//books, err := bc.getBooksFromDatabase()
+	books, err := bc.getBooksFromDatabaseWithGorm()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al obtener la lista de libros"})
 		return
@@ -31,7 +41,7 @@ func (bc *BookController) ListBooks(c *gin.Context) {
 	c.JSON(http.StatusOK, books)
 }
 
-func (bc *BookController) getBooksFromDatabase() ([]models.Book, error) {
+/*func (bc *BookController) getBooksFromDatabase() ([]models.Book, error) {
 	query := "SELECT id, title, author, isbn FROM books"
 
 	rows, err := bc.db.Query(query)
@@ -57,10 +67,21 @@ func (bc *BookController) getBooksFromDatabase() ([]models.Book, error) {
 	}
 
 	return books, nil
+}*/
+
+func (bc *BookController) getBooksFromDatabaseWithGorm() ([]models.Book, error) {
+	var books []models.Book
+
+	result := bc.db.Select("id, title, author, isbn").Find(&books)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return books, nil
 }
 
 // GetBookByName busca un libro por nombre
-func (bc *BookController) GetBookByName(c *gin.Context) {
+/*func (bc *BookController) GetBookByName(c *gin.Context) {
 	name := c.Param("name")
 
 	// Consultar la base de datos para obtener el libro por nombre
@@ -172,4 +193,4 @@ func (bc *BookController) UpdateBook(c *gin.Context) {
 	// Update the book in the database
 
 	// Return the updated book as the JSON response
-}
+}*/

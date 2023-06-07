@@ -1,7 +1,7 @@
 package main
 
 import (
-	"database/sql"
+	//"database/sql"
 	"fmt"
 	"log"
 
@@ -9,7 +9,16 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jonathanbs9/bookstore-ai-api/controllers"
 	"github.com/jonathanbs9/bookstore-ai-api/routes"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
+
+type Book struct {
+	ID     int    `gorm:"primaryKey;autoIncrement"`
+	Title  string `gorm:"not null"`
+	Author string `gorm:"not null"`
+	ISBN   string `gorm:"not null"`
+}
 
 func main() {
 	// Configurar la conexión a la base de datos MySQL
@@ -22,23 +31,18 @@ func main() {
 	// }
 	//db, err := models.SetupDB(dbConfig)
 
-	/* db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/book_inventory")
-	if err != nil {
-		log.Fatal("Error al conectar a la base de datos: ", err)
-	}
-	defer db.Close()*/
+	//db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/book_inventory")
+	//if err != nil {
+	//	log.Fatal("Error al conectar a la base de datos: ", err)
+	//}
+	//defer db.Close()
 
-	dsn := "jonathanbs:ihmQFPAYETnygjZodt49EA@tcp(azure-mule-888.g8x.cockroachlabs.cloud:26257)/book_inventory"
+	//dsn := "jonathanbs:ihmQFPAYETnygjZodt49EA@tcp(azure-mule-888.g8x.cockroachlabs.cloud:26257)/book_inventory"
 
-	db, err := sql.Open("mysql", dsn)
+	dsn := "postgresql://jonathanbs:ihmQFPAYETnygjZodt49EA@azure-mule-888.g8x.cockroachlabs.cloud:26257/book_inventory?sslmode=verify-full"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("failed to connect database:", err)
-	}
-	defer db.Close()
-
-	err = db.Ping()
-	if err != nil {
-		log.Fatal("failed to ping database:", err)
+		log.Fatal("failed to connect database", err)
 	}
 
 	// Ejecutar script para crear la tabla si no existe
@@ -47,7 +51,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = createData(db)
+	//err = createData(db)
+	err = createDataWithGorm(db)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,7 +61,8 @@ func main() {
 	router := gin.Default()
 
 	// Inicializar los controladores
-	bookController := controllers.NewBookController(db)
+	//bookController := controllers.NewBookController(db)
+	bookController := controllers.NewBookControllerWithGorm(db)
 
 	// Definir las rutas
 	routes.SetupRoutes(router, bookController)
@@ -69,17 +75,10 @@ func main() {
 
 }
 
-func createTableIfNotExists(db *sql.DB) error {
-	query := `
-		CREATE TABLE IF NOT EXISTS books (
-			id INT AUTO_INCREMENT PRIMARY KEY,
-			title VARCHAR(255) NOT NULL,
-			author VARCHAR(255) NOT NULL,
-			isbn VARCHAR(13) NOT NULL
-		);
-	`
+// Create Table if NOT Exist
+func createTableIfNotExists(db *gorm.DB) error {
 
-	_, err := db.Exec(query)
+	err := db.AutoMigrate(&Book{})
 	if err != nil {
 		return fmt.Errorf("error al crear la tabla: %v", err)
 	}
@@ -89,7 +88,8 @@ func createTableIfNotExists(db *sql.DB) error {
 	return nil
 }
 
-func createData(db *sql.DB) error {
+// Create Data
+/*func createData(db *sql.DB) error {
 	query := `SELECT COUNT(*) INTO @count FROM books`
 
 	// querytwo := `INSERT INTO books (title, author, isbn)
@@ -135,6 +135,40 @@ func createData(db *sql.DB) error {
 	log.Println(result)
 
 	fmt.Println("Tabla 'books' poblada correctamente")
+
+	return nil
+}*/
+
+func createDataWithGorm(db *gorm.DB) error {
+	// Crea la tabla "books" si no existe
+	err := db.AutoMigrate(&Book{})
+	if err != nil {
+		return fmt.Errorf("error al migrar la tabla 'books': %v", err)
+	}
+
+	// Verifica si ya hay registros en la tabla
+	var count int64
+	if err := db.Model(&Book{}).Count(&count).Error; err != nil {
+		return fmt.Errorf("error al contar registros en la tabla 'books': %v", err)
+	}
+
+	if count == 0 {
+		// Inserta los registros en la tabla "books"
+		books := []Book{
+			{Title: "Cien años de soledad", Author: "Gabriel García Márquez", ISBN: "9788437604947"},
+			{Title: "Harry Potter y la piedra filosofal", Author: "J.K. Rowling", ISBN: "9788478886456"},
+			// Agrega el resto de los libros aquí
+		}
+
+		err = db.Create(&books).Error
+		if err != nil {
+			return fmt.Errorf("error al insertar registros en la tabla 'books': %v", err)
+		}
+
+		fmt.Println("Tabla 'books' poblada correctamente")
+	} else {
+		fmt.Println("La tabla 'books' ya contiene registros")
+	}
 
 	return nil
 }
