@@ -79,7 +79,8 @@ func main() {
 	routes.SetupRoutes(router, bookController)
 
 	// Iniciar el servidor HTTP
-	err = router.Run("0.0.0.0:8080")
+	baseURL := os.Getenv("BASEURL")
+	err = router.Run(baseURL + ":80")
 	if err != nil {
 		log.Fatal("Error al iniciar el servidor HTTP: ", err)
 	}
