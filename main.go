@@ -79,7 +79,7 @@ func main() {
 	routes.SetupRoutes(router, bookController)
 
 	// Iniciar el servidor HTTP
-	err = router.Run(":8080")
+	err = router.Run("0.0.0.0:8080")
 	if err != nil {
 		log.Fatal("Error al iniciar el servidor HTTP: ", err)
 	}
