@@ -22,11 +22,24 @@ func main() {
 	// }
 	//db, err := models.SetupDB(dbConfig)
 
-	db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/book_inventory")
+	/* db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/book_inventory")
 	if err != nil {
 		log.Fatal("Error al conectar a la base de datos: ", err)
 	}
+	defer db.Close()*/
+
+	dsn := "jonathanbs:ihmQFPAYETnygjZodt49EA@tcp(azure-mule-888.g8x.cockroachlabs.cloud:26257)/book_inventory"
+
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		log.Fatal("failed to connect database:", err)
+	}
 	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		log.Fatal("failed to ping database:", err)
+	}
 
 	// Ejecutar script para crear la tabla si no existe
 	err = createTableIfNotExists(db)
