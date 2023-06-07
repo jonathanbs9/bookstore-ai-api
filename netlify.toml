@@ -1,3 +1,10 @@
 [build]
-  command = "go mod download"
-  #publish = "bookstore-ai-api/"
+  command = "go build -o bookstore-ai-api"
+  publish = "bookstore-ai-api"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[plugins.inputs]]
+  package = "@netlify/plugin-nextjs"
+  command = "next build"
