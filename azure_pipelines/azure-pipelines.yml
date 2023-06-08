@@ -1,0 +1,31 @@
+# azure-pipelines.yml
+
+trigger:
+  branches:
+    include:
+      - main # Cambia esto si utilizas una rama diferente
+
+pool:
+  vmImage: "ubuntu-latest"
+
+steps:
+  - task: GoTool@0
+    inputs:
+      version: "stable"
+
+  - script: go build -o $(Build.ArtifactStagingDirectory)/app ./ # Compila la aplicación y genera el archivo ejecutable en la carpeta de artefactos
+    displayName: "Build Go Application"
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: "$(Build.ArtifactStagingDirectory)/app"
+      includeRootFolder: false
+      archiveType: "zip"
+      archiveFile: "$(Build.ArtifactStagingDirectory)/app.zip"
+    displayName: "Create Application ZIP Archive"
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)/app.zip"
+      ArtifactName: "drop"
+    displayName: "Publish Application Artifact"
